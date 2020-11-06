@@ -12,7 +12,7 @@ def loadDataset(infile):
 
 if __name__=="__main__":
     data_X = loadDataset(r"D:\\Projects\\PyCharmProjects\\ML\\Kmeans\\data\\testSet.txt")
-    #依次取k = 3,4,5，6，7,89
+    #依次取k = 3,4,5,6 测试
     for k in range(3,7):
         clf = KMeansClassifier(k)
         clf.fit(data_X)
