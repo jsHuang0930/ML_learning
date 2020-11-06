@@ -107,83 +107,83 @@ class KMeansClassifier():
         return preds
 
         
-class biKMeansClassifier():
-    # 二分kmeans分类器
-    "this is a binary k-means classifier"
+# class biKMeansClassifier():
+#     # 二分kmeans分类器
+#     "this is a binary k-means classifier"
     
-    def __init__(self, k=3):
+#     def __init__(self, k=3):
         
-        self._k = k
-        self._centroids = None
-        self._clusterAssment = None
-        self._labels = None
-        self._sse = None
+#         self._k = k
+#         self._centroids = None
+#         self._clusterAssment = None
+#         self._labels = None
+#         self._sse = None
         
     
-    def _calEDist(self, arrA, arrB):
-        """
-        功能：欧拉距离距离计算
-        输入：两个一维数组
-        """
-        return np.math.sqrt(sum(np.power(arrA-arrB, 2)))
+#     def _calEDist(self, arrA, arrB):
+#         """
+#         功能：欧拉距离距离计算
+#         输入：两个一维数组
+#         """
+#         return np.math.sqrt(sum(np.power(arrA-arrB, 2)))
         
-    def fit(self, X):
-        m = X.shape[0]
-        self._clusterAssment = np.zeros((m,2))
-        centroid0 = np.mean(X, axis=0).tolist()
-        centList =[centroid0]
-        for j in range(m):#计算每个样本点与质心之间初始的平方误差
-            self._clusterAssment[j,1] = self._calEDist(np.asarray(centroid0), \
-                                        X[j,:])**2
+#     def fit(self, X):
+#         m = X.shape[0]
+#         self._clusterAssment = np.zeros((m,2))
+#         centroid0 = np.mean(X, axis=0).tolist()
+#         centList =[centroid0]
+#         for j in range(m):#计算每个样本点与质心之间初始的平方误差
+#             self._clusterAssment[j,1] = self._calEDist(np.asarray(centroid0), \
+#                                         X[j,:])**2
         
-        while (len(centList) < self._k):
-            lowestSSE = np.inf
-            #尝试划分每一族,选取使得误差最小的那个族进行划分
-            for i in range(len(centList)):
-                index_all = self._clusterAssment[:,0] #取出样本所属簇的索引值
-                value = np.nonzero(index_all==i) #取出所有属于第i个簇的索引值
-                ptsInCurrCluster = X[value[0],:] #取出属于第i个簇的所有样本点
-                clf = KMeansClassifier(k=2)
-                clf.fit(ptsInCurrCluster)
-                #划分该族后，所得到的质心、分配结果及误差矩阵
-                centroidMat, splitClustAss = clf._centroids, clf._clusterAssment
-                sseSplit = sum(splitClustAss[:,1])
-                index_all = self._clusterAssment[:,0] 
-                value = np.nonzero(index_all==i)
-                sseNotSplit = sum(self._clusterAssment[value[0],1])
-                if (sseSplit + sseNotSplit) < lowestSSE:
-                    bestCentToSplit = i
-                    bestNewCents = centroidMat
-                    bestClustAss = splitClustAss.copy()
-                    lowestSSE = sseSplit + sseNotSplit
-            #该族被划分成两个子族后,其中一个子族的索引变为原族的索引
-            #另一个子族的索引变为len(centList),然后存入centList
-            bestClustAss[np.nonzero(bestClustAss[:,0]==1)[0],0]=len(centList)
-            bestClustAss[np.nonzero(bestClustAss[:,0]==0)[0],0]=bestCentToSplit
-            centList[bestCentToSplit] = bestNewCents[0,:].tolist()
-            centList.append(bestNewCents[1,:].tolist())
-            self._clusterAssment[np.nonzero(self._clusterAssment[:,0] == \
-                                        bestCentToSplit)[0],:]= bestClustAss 
+#         while (len(centList) < self._k):
+#             lowestSSE = np.inf
+#             #尝试划分每一族,选取使得误差最小的那个族进行划分
+#             for i in range(len(centList)):
+#                 index_all = self._clusterAssment[:,0] #取出样本所属簇的索引值
+#                 value = np.nonzero(index_all==i) #取出所有属于第i个簇的索引值
+#                 ptsInCurrCluster = X[value[0],:] #取出属于第i个簇的所有样本点
+#                 clf = KMeansClassifier(k=2)
+#                 clf.fit(ptsInCurrCluster)
+#                 #划分该族后，所得到的质心、分配结果及误差矩阵
+#                 centroidMat, splitClustAss = clf._centroids, clf._clusterAssment
+#                 sseSplit = sum(splitClustAss[:,1])
+#                 index_all = self._clusterAssment[:,0] 
+#                 value = np.nonzero(index_all==i)
+#                 sseNotSplit = sum(self._clusterAssment[value[0],1])
+#                 if (sseSplit + sseNotSplit) < lowestSSE:
+#                     bestCentToSplit = i
+#                     bestNewCents = centroidMat
+#                     bestClustAss = splitClustAss.copy()
+#                     lowestSSE = sseSplit + sseNotSplit
+#             #该族被划分成两个子族后,其中一个子族的索引变为原族的索引
+#             #另一个子族的索引变为len(centList),然后存入centList
+#             bestClustAss[np.nonzero(bestClustAss[:,0]==1)[0],0]=len(centList)
+#             bestClustAss[np.nonzero(bestClustAss[:,0]==0)[0],0]=bestCentToSplit
+#             centList[bestCentToSplit] = bestNewCents[0,:].tolist()
+#             centList.append(bestNewCents[1,:].tolist())
+#             self._clusterAssment[np.nonzero(self._clusterAssment[:,0] == \
+#                                         bestCentToSplit)[0],:]= bestClustAss 
                    
-        self._labels = self._clusterAssment[:,0] 
-        self._sse = sum(self._clusterAssment[:,1])
-        self._centroids = np.asarray(centList)
+#         self._labels = self._clusterAssment[:,0] 
+#         self._sse = sum(self._clusterAssment[:,1])
+#         self._centroids = np.asarray(centList)
                                 
-    def predict(self, X):#根据聚类结果，预测新输入数据所属的族
-        #类型检查
-        if not isinstance(X,np.ndarray):
-            try:
-                X = np.asarray(X)
-            except:
-                raise TypeError("numpy.ndarray required for X")
+#     def predict(self, X):#根据聚类结果，预测新输入数据所属的族
+#         #类型检查
+#         if not isinstance(X,np.ndarray):
+#             try:
+#                 X = np.asarray(X)
+#             except:
+#                 raise TypeError("numpy.ndarray required for X")
         
-        m = X.shape[0]#m代表样本数量
-        preds = np.empty((m,))
-        for i in range(m):#将每个样本点分配到离它最近的质心所属的族
-            minDist = np.inf
-            for j in range(self._k):
-                distJI = self._calEDist(self._centroids[j,:],X[i,:])
-                if distJI < minDist:
-                    minDist = distJI
-                    preds[i] = j
-        return preds
+#         m = X.shape[0]#m代表样本数量
+#         preds = np.empty((m,))
+#         for i in range(m):#将每个样本点分配到离它最近的质心所属的族
+#             minDist = np.inf
+#             for j in range(self._k):
+#                 distJI = self._calEDist(self._centroids[j,:],X[i,:])
+#                 if distJI < minDist:
+#                     minDist = distJI
+#                     preds[i] = j
+#         return preds
