@@ -30,19 +30,16 @@ class KMeansClassifier():
 
 
     def _randCent(self, data_X, k):
-        # 随机选取k个质心,初始化k个质心
+        # 随机选取k个质心
         # 输出：centroids 
         # 返回：一个m*n的质心矩阵
 
         n = data_X.shape[1] #获取特征的维数
-        #使用numpy生成一个k*n的矩阵，用于存储质心
-        centroids = np.empty((k,n))  
+        centroids = np.empty((k,n))  #使用numpy生成一个k*n的矩阵，用于存储质心
         for j in range(n):
-            # 找出矩阵data_X第j列最小值
-            minJ = min(data_X[:, j])
-            #计算第j列最大值和最小值的差
-            rangeJ  = float(max(data_X[:, j] - minJ))
-            # 赋予一个随机质心，值在整个数据集的边界之内,使用flatten拉平嵌套列表(nested list)
+            minJ = min(data_X[:, j])# 找出矩阵data_X第j列最小值
+            rangeJ  = float(max(data_X[:, j] - minJ))#计算第j列最大值和最小值的差
+            #使用flatten拉平嵌套列表(nested list)
             centroids[:, j] = (minJ + rangeJ * np.random.rand(k, 1)).flatten()
         return centroids 
     

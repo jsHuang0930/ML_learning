@@ -16,16 +16,16 @@ if __name__=="__main__":
     for k in range(3,7):
         clf = KMeansClassifier(k)
         clf.fit(data_X)
-        cents  = clf._centroids
+        cents = clf._centroids
         labels = clf._labels
-        sse    = clf._sse
+        sse = clf._sse
         colors = ['b','g','r','k','c','m','y','#e24fff','#524C90','#845868']
         for i in range(k):
             index = np.nonzero(labels==i)[0]
-            x0    = data_X[index, 0]
-            x1    = data_X[index, 1]
-            y_i   = i
-            for j in range(len(x0)): 
+            x0 = data_X[index, 0]
+            x1 = data_X[index, 1]
+            y_i = i
+            for j in range(len(x0)):
                 plt.text(x0[j], x1[j], str(y_i), color=colors[i], \
                             fontdict={'weight': 'bold', 'size': 6})
             plt.scatter(cents[i,0],cents[i,1],marker='x',color=colors[i],\

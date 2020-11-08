@@ -10,17 +10,17 @@ def loadDataset(infile):
     df = pd.read_csv(infile, sep='\t', header=0, dtype=str, na_filter=False)
     return np.array(df).astype(np.float)
 
-if __name__=="__main__":
-    data_X = loadDataset(r"D:\\Projects\\PyCharmProjects\\ML\\Kmeans\\data\\testSet.txt")
-    #依次取k = 3,4,5,6   
-    for k in range(3,7):
+if __name__= "__main__":
+   data_X    = loadDataset(r"D:\\Projects\\PyCharmProjects\\ML\\Kmeans\\data\\testSet.txt")
+   #依次取k     = 3, 4, 5, 6
+    for k in range(3,7): 
         clf = KMeansClassifier(k)
         clf.fit(data_X)
         cents  = clf._centroids
         labels = clf._labels
         sse    = clf._sse
         colors = ['b','g','r','k','c','m','y','#e24fff','#524C90','#845868']
-        for i in range(k):
+        for i in range(k): 
             index = np.nonzero(labels==i)[0]
             x0    = data_X[index, 0]
             x1    = data_X[index, 1]
@@ -36,3 +36,5 @@ if __name__=="__main__":
         outname = "./result/k_clusters" + str(k) + ".png"
         plt.savefig(outname)
         plt.show()
+    
+    
